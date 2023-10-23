@@ -10,6 +10,8 @@ def lambda_handler(event, context):
     try:
         table = dynamodb.Table(os.environ['TABLE_NAME'])
         stageIds = []
+        if event['queryStringParameters']['stage']:
+            print('I am not the problem')
         print('querying stage ids...')
         if event['queryStringParameters']['stage']:
             response = table.get_item(
