@@ -13,10 +13,11 @@ def lambda_handler(event, context):
         print(event['queryStringParameters']['stage'])
         response = table.get_item(
             Key={
-                'PK':('Tournament#' + str(event['pathParameters']['tournament_id'])),'SK':('Stage#' + str(event['queryStringParameters']['stage']))
-            }
+                'PK':('Tournament#' + event['pathParameters']['tournament_id']),'SK':('Stage#' + event['queryStringParameters']['stage'])
+            },
+            ProjectionExpression='StageId'
         )
-        stageId = response['Item']
+        stageId = response['Item']['StageId']
 
         response = table.query(
             IndexName=os.environ['POINTS_LSI_NAME'],
