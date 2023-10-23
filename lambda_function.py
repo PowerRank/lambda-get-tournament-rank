@@ -10,6 +10,7 @@ def lambda_handler(event, context):
     try:
         table = dynamodb.Table(os.environ['TABLE_NAME'])
         stageIds = []
+        print('querying stage ids...')
         if event['queryStringParameters']['stage']:
             response = table.get_item(
                 Key={
@@ -19,6 +20,7 @@ def lambda_handler(event, context):
                 ProjectionExpression='StageId,#n',
                 ExpressionAttributeNames={'#n': 'Name'}
             )
+            print('got stage id...')
             stageIds.append([response['Item']['StageId'], response['Item']['Name']])
         else:
             response = table.query(
@@ -26,10 +28,12 @@ def lambda_handler(event, context):
                 KeyConditionExpression=Key('PK').eq('Tournament#' + event['pathParameters']['tournament_id']),
                 ExpressionAttributeNames={'#n': 'Name'}
             )
+            print('got stage multiple ids...')
             for item in response['Items']:
                 stageIds.append([item['StageId'], item['Name']])
         ranks = {}
         for id in stageIds:
+            print('querying a stage id...')
             response = table.query(
                 IndexName=os.environ['POINTS_LSI_NAME'],
                 ScanIndexForward=False,
