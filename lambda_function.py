@@ -15,7 +15,7 @@ def lambda_handler(event, context):
                 response = table.get_item(
                     Key={
                         'PK':('Tournament#' + event['pathParameters']['tournament_id']),
-                        'SK':('Stage#' + event['queryStringParameters']['stage'])
+                        'SK':('Stage#' + (event['queryStringParameters']['stage']).upper())
                     },
                     ProjectionExpression='StageId,#n',
                     ExpressionAttributeNames={'#n': 'Name'}
