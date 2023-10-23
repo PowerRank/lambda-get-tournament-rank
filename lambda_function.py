@@ -28,6 +28,7 @@ def lambda_handler(event, context):
             )
             for item in response['Items']:
                 stageIds.append([item['StageId'], item['Name']])
+        ranks = {}
         for id in stageIds:
             response = table.query(
                 IndexName=os.environ['POINTS_LSI_NAME'],
@@ -36,7 +37,7 @@ def lambda_handler(event, context):
                 KeyConditionExpression=Key('PK').eq('Stage#'+id[0]),
                 ExpressionAttributeNames={'#n': 'Name'}
             )
-            ranks = ranks.append({'Name':id[1],'Ranks':response['Items']})
+            ranks = ranks[id[1]]=response['Items']
         return {
             'statusCode': 200, 
             'body':json.dumps(json_util.loads(ranks))
