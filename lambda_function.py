@@ -8,6 +8,9 @@ dynamodb = boto3.resource('dynamodb')
 def lambda_handler(event, context):
     try:
         table = dynamodb.Table(os.environ['TABLE_NAME'])
+        print(event['queryStringParameters']['stage'],type(event['queryStringParameters']['stage']))
+        print(event['pathParameters'])
+        print(event['queryStringParameters'])
         response = table.query(
             IndexName = os.environ['POINTS_LSI_NAME'],
             ScanIndexForward=False,
