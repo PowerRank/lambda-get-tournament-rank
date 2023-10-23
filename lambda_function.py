@@ -9,6 +9,8 @@ dynamodb = boto3.resource('dynamodb')
 def lambda_handler(event, context):
     try:
         table = dynamodb.Table(os.environ['TABLE_NAME'])
+        print(event['pathParameters']['tournament_id'])
+        print(event['queryStringParameters']['stage'])
         response = table.get_item(
             Key={
                 'PK':('Tournament#' + event['pathParameters']['tournament_id']),'SK':('Stage#' + event['queryStringParameters']['stage'])
