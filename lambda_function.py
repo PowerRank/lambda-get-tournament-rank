@@ -37,7 +37,8 @@ def lambda_handler(event, context):
                 KeyConditionExpression=Key('PK').eq('Stage#'+id[0]),
                 ExpressionAttributeNames={'#n': 'Name'}
             )
-            ranks = ranks[id[1]]=response['Items']
+            print('adding ranks to ranks...')
+            ranks[id[1]]=response['Items']
         return {
             'statusCode': 200, 
             'body':json.dumps(json_util.loads(ranks))
