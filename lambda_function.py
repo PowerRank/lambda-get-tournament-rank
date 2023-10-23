@@ -10,24 +10,20 @@ def lambda_handler(event, context):
     try:
         table = dynamodb.Table(os.environ['TABLE_NAME'])
         stageIds = []
+        print('querying stage ids...')
         try:
             if event['queryStringParameters']['stage']:
-                print('I am not the problem')
+                response = table.get_item(
+                    Key={
+                        'PK':('Tournament#' + event['pathParameters']['tournament_id']),
+                        'SK':('Stage#' + event['queryStringParameters']['stage'])
+                    },
+                    ProjectionExpression='StageId,#n',
+                    ExpressionAttributeNames={'#n': 'Name'}
+                )
+                print('got stage id...')
+                stageIds.append([response['Item']['StageId'], response['Item']['Name']])
         except:
-            print('I am the problem')
-        print('querying stage ids...')
-        if event['queryStringParameters']['stage']:
-            response = table.get_item(
-                Key={
-                    'PK':('Tournament#' + event['pathParameters']['tournament_id']),
-                    'SK':('Stage#' + event['queryStringParameters']['stage'])
-                },
-                ProjectionExpression='StageId,#n',
-                ExpressionAttributeNames={'#n': 'Name'}
-            )
-            print('got stage id...')
-            stageIds.append([response['Item']['StageId'], response['Item']['Name']])
-        else:
             response = table.query(
                 ProjectionExpression='StageId,#n',
                 KeyConditionExpression=Key('PK').eq('Tournament#' + event['pathParameters']['tournament_id']),
