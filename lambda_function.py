@@ -1,6 +1,6 @@
 import boto3
-import json
 import os
+from dynamodb_json import json_util 
 from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource('dynamodb')
@@ -20,7 +20,7 @@ def lambda_handler(event, context):
         )
         return {
             'statusCode': 200, 
-            'body':json.dumps(json.loads(response['Items']))
+            'body':json_util.dumps(json_util.loads(response['Items']))
         }
     except Exception as e:
         print(f'Exception: {e}')
