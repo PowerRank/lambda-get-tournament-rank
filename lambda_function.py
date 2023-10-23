@@ -12,7 +12,7 @@ def lambda_handler(event, context):
             IndexName = os.environ['POINTS_LSI_NAME'],
             ScanIndexForward=False,
             ProjectionExpression='TeamId,#n,Points',
-            KeyConditionExpression=Key('PK').eq('Stage#'+event['pathParameters']['stage']),
+            KeyConditionExpression=Key('PK').eq('Stage#'+event['queryStringParameters']['stage']),
             ExpressionAttributeNames = {'#n': 'Name'}
         )
         return {
